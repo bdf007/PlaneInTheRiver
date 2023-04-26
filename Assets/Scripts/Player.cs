@@ -70,4 +70,16 @@ public class Player : MonoBehaviour
         bullet.GetComponent<Rigidbody2D>().velocity = Vector2.up * bulletSpeed;
         Destroy(bullet, bulletDestroyTime);
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        // if the enemy is hit by a bullet
+        if (collision.gameObject.CompareTag("EnemyBullet") || collision.gameObject.CompareTag("Enemy"))
+        {
+            // destroy the bullet
+            Destroy(collision.gameObject);
+            // destroy the Player
+            Destroy(gameObject);
+        }
+    }
 }
