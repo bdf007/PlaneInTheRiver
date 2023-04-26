@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
+    public delegate void KillHandler();
+    public event KillHandler OnKill;
+
     [Header("Enemy")]
     public float speed;
     public float shootInterval = 6f;
@@ -12,6 +15,8 @@ public class Enemy : MonoBehaviour
     [Header("Bullet")]
     public GameObject bulletPrefab;
     public float bulletSpeed;
+    public float bulletDestroyTime = 3f;
+
 
     private float shootTimer;
 
@@ -53,6 +58,10 @@ public class Enemy : MonoBehaviour
         bullet.transform.position = new Vector2(transform.position.x, transform.position.y - 0.5f);
         // set the bullet's velocity
         bullet.GetComponent<Rigidbody2D>().velocity = new Vector2(0f, -bulletSpeed);
+        // destroy the bullet
+        Destroy(bullet, bulletDestroyTime);
+        
+
         
     }
 
@@ -65,6 +74,13 @@ public class Enemy : MonoBehaviour
             gameObject.SetActive(false);
             // destroy the enemy
             Destroy(gameObject);
+
+            // if there is a kill handler
+            if (OnKill != null)
+            {
+                // call the kill handler
+                OnKill();
+            }
         }
     }
 }
