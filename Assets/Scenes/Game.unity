@@ -1535,6 +1535,9 @@ MonoBehaviour:
   horizontalSpeed: 3
   verticalSpeed: 1.5
   horizontalLimit: 2.8
+  bulletPrefab: {fileID: 721641698738138681, guid: ceb5736fc5daca74e93244043a0aeab0, type: 3}
+  bulletSpeed: 5
+  bulletDestroyTime: 3
 --- !u!212 &530875218
 SpriteRenderer:
   m_ObjectHideFlags: 0

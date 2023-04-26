@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-
+    [Header("Player")]
     public float horizontalSpeed = 3f;
     public float verticalSpeed = 1.5f;
     public float horizontalLimit = 2.8f;
+
+    [Header("Bullet")]
+    public GameObject bulletPrefab;
+    public float bulletSpeed = 5f;
+    public float bulletDestroyTime = 3f;
+    private bool fired = false;
 
     private Rigidbody2D playerRb;
 
@@ -37,5 +43,31 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector2(horizontalLimit, transform.position.y);
         }
+
+        // shoot a bullet
+        if (Input.GetAxis("Fire1") == 1f)
+        {
+            if (!fired)
+            {
+                fired = true;
+                Fire();
+            }
+            
+        }
+        else
+        {
+            fired = false;
+        }
+
+    }
+
+    void Fire()
+    {
+        
+        GameObject bullet = Instantiate(bulletPrefab, transform.position, Quaternion.identity);
+        bullet.transform.SetParent(transform.parent);
+        bullet.transform.position = transform.position;
+        bullet.GetComponent<Rigidbody2D>().velocity = Vector2.up * bulletSpeed;
+        Destroy(bullet, bulletDestroyTime);
     }
 }
