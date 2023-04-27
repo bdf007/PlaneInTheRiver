@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour
         enemyRb = GetComponent<Rigidbody2D>();
     }
     // Start is called before the first frame update
-    void Start()
+    void OnEnable()
     {
         // set the shoot timer random 
         shootTimer = Random.Range(0f, shootInterval);
@@ -71,9 +71,9 @@ public class Enemy : MonoBehaviour
         if (collision.gameObject.CompareTag("PlayerBullet"))
         {
             // destroy the bullet
-            gameObject.SetActive(false);
+            Destroy(collision.gameObject);
             // destroy the enemy
-            Destroy(gameObject);
+            gameObject.SetActive(false);
 
             // if there is a kill handler
             if (OnKill != null)

@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ZenvaVR
-{
+
     public class ObjectPool : MonoBehaviour {
 
         //prefab that the pool will use
@@ -100,4 +99,3 @@ namespace ZenvaVR
             return activeObjs;
         }
     }
-}

@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
     public GameObject player;
-    public GameObject enemyPrefab;
+    public ObjectPool enemyPool;
     private GameObject mainCamera;
     public GameObject fuelPrefab;
     public float spawnRate = 2f;
@@ -20,6 +21,7 @@ public class GameController : MonoBehaviour
 
     private int score;
     private float fuel = 100f;
+    private float restartTimer = 3f;
 
     void Awake()
     {
@@ -72,6 +74,14 @@ public class GameController : MonoBehaviour
                 fuelText.text = "Fuel: 0";
                 Destroy(player.gameObject);
             }
+        } 
+        else
+        {
+            restartTimer -= Time.deltaTime;
+            if (restartTimer <= 0f)
+            {
+                SceneManager.LoadScene("Game");
+            }
         }
 
         // delete the enemy if it is out of screen
@@ -79,7 +89,7 @@ public class GameController : MonoBehaviour
         {
             if(mainCamera.transform.position.y - enemy.transform.position.y > Screen.height / 100)
             {
-                Destroy(enemy.gameObject);
+                enemy.gameObject.SetActive(false);
             }
         }
         
@@ -88,7 +98,7 @@ public class GameController : MonoBehaviour
     void SpawnEnemy()
     {
         // create a new enemy
-        GameObject enemy = Instantiate(enemyPrefab);
+        GameObject enemy = enemyPool.GetObj();
         // set enemy parent
         enemy.transform.SetParent(transform);
         // set enemy position to random x and top of screen according to the playe
