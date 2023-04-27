@@ -8,8 +8,12 @@ public class GameController : MonoBehaviour
     public GameObject player;
     public GameObject enemyPrefab;
     private GameObject mainCamera;
+    public GameObject fuelPrefab;
     public float spawnRate = 2f;
     public float horizontalLimit = 2.8f;
+    public float fuelDecreaseRate = 5f;
+    public float fuelSpawnRate = 9f;
+    private float fuelSpawnTimer;
 
     public Text scoreText;
     public Text fuelText;
@@ -27,6 +31,9 @@ public class GameController : MonoBehaviour
     void Start()
     {
         spawnTimer = spawnRate;
+        player.GetComponent<Player>().OnFuel += OnFuel;
+
+        fuelSpawnTimer = Random.Range(0f, fuelSpawnRate);
     }
 
     // Update is called once per frame
@@ -44,6 +51,26 @@ public class GameController : MonoBehaviour
                 // spawn enemy
                 SpawnEnemy();
 
+            }
+
+            // update fuel spawn timer
+            fuelSpawnTimer -= Time.deltaTime;
+            // spawn fuel if timer is less than 0
+            if (fuelSpawnTimer < 0)
+            {
+                // reset fuel spawn timer
+                fuelSpawnTimer = fuelSpawnRate;
+                // spawn fuel
+                SpawnFuel();
+               
+            }
+
+            fuel -= Time.deltaTime * fuelDecreaseRate;
+            fuelText.text = "Fuel: " + Mathf.RoundToInt(fuel);
+            if (fuel < 0)
+            {
+                fuelText.text = "Fuel: 0";
+                Destroy(player.gameObject);
             }
         }
 
@@ -70,9 +97,25 @@ public class GameController : MonoBehaviour
         
     }
 
+    void SpawnFuel()
+    {
+        // spawn fuel
+        GameObject fuel = Instantiate(fuelPrefab);
+        // set fuel parent
+        fuel.transform.SetParent(transform);
+        // set fuel position to random x and top of screen according to the playe
+        fuel.transform.position = new Vector2(Random.Range(-horizontalLimit, horizontalLimit), player.transform.position.y + Screen.height / 100);
+    }
+
     void OnEnemyKill()
     {
         score += 25;
         scoreText.text = "Score: " + score;
+    }
+
+    void OnFuel()
+    {
+        fuel = 100f;
+
     }
 }

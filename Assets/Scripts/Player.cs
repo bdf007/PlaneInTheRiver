@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
+    public delegate void FuelHandler();
+    public event FuelHandler OnFuel;
+
     [Header("Player")]
     public float horizontalSpeed = 3f;
     public float verticalSpeed = 1.5f;
@@ -80,6 +84,16 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject);
             // destroy the Player
             Destroy(gameObject);
+        }
+        else if( collision.gameObject.CompareTag("Fuel"))
+        {
+            // destroy the fuel
+            Destroy(collision.gameObject);
+            // call the event
+            if (OnFuel != null)
+            {
+                OnFuel();
+            }
         }
     }
 }
